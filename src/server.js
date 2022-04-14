@@ -1,6 +1,7 @@
 'use strict';
 
 const Hapi = require('@hapi/hapi');
+const getStudentInformation = require('./platzi/student');
 
 const init = async () => {
 	const server = Hapi.server({
@@ -11,9 +12,26 @@ const init = async () => {
 	server.route({
 		method: 'GET',
 		path: '/',
-		handler: () => {
+		handler: async () => {
 			return {
 				currentDate: new Date(),
+			};
+		},
+	});
+
+	server.route({
+		method: 'GET',
+		path: '/students/{username}',
+		handler: async (request) => {
+			const { username } = request.params;
+			let result = {};
+			try {
+				result = await getStudentInformation(username);
+			} catch (error) {
+				result.error = error.message;
+			}
+			return {
+				...result,
 			};
 		},
 	});
