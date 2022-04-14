@@ -16,7 +16,9 @@ async function getStudentInformation(username) {
 	const page = await browser.newPage();
 	let userAgent = new UA();
 	await page.setUserAgent(userAgent.toString());
-	await page.goto(`https://platzi.com/p/${username}`);
+	await page.goto(`https://platzi.com/p/${username}`, {
+		timeout: 0,
+	});
 
 	page.on('console', (consoleObj) => console.log(consoleObj.text()));
 
