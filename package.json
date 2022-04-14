@@ -1,0 +1,25 @@
+{
+	"name": "neverstopauth",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "node src/server.js",
+		"test": "echo \"Error: no test specified\" && exit 0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/eperedo/never-stop-auth.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/eperedo/never-stop-auth/issues"
+	},
+	"homepage": "https://github.com/eperedo/never-stop-auth#readme",
+	"dependencies": {
+		"@hapi/hapi": "20.2.1",
+		"puppeteer": "13.5.2"
+	}
+}
