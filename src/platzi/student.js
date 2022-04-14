@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 
 async function getStudentInformation(username) {
 	const browser = await puppeteer.launch({
-		headless: false,
+		headless: process.env.P_HEADLESS || false,
 		args: ['--start-maximized'],
 	});
 	const page = await browser.newPage();
