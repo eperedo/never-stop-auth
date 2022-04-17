@@ -1,6 +1,10 @@
 'use strict';
+if (process.env.NODE_ENV !== 'production') {
+	require('dotenv').config();
+}
 
 const Hapi = require('@hapi/hapi');
+const getRankingInformation = require('./platzi/ranking');
 const getStudentInformation = require('./platzi/student');
 
 const init = async () => {
@@ -32,6 +36,27 @@ const init = async () => {
 			}
 			return {
 				...result,
+			};
+		},
+	});
+
+	server.route({
+		method: 'GET',
+		path: '/ranking',
+		handler: async (request) => {
+			let result = {};
+			if (process.env.RANKING_PWD === request.headers['x-platzi-token']) {
+				try {
+					result = await getRankingInformation();
+				} catch (error) {
+					result.error = error.message;
+				}
+				return {
+					...result,
+				};
+			}
+			return {
+				message: 'nice try, but nope',
 			};
 		},
 	});

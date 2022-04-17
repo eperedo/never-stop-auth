@@ -13,18 +13,21 @@
 	},
 	"keywords": [],
 	"author": "",
-	"license": "ISC",
+	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/eperedo/never-stop-auth/issues"
 	},
 	"homepage": "https://github.com/eperedo/never-stop-auth#readme",
 	"dependencies": {
 		"@hapi/hapi": "20.2.1",
+		"aws-sdk": "2.1116.0",
 		"chrome-aws-lambda": "10.1.0",
 		"puppeteer-core": "13.5.2",
+		"twitter": "1.7.1",
 		"user-agents": "1.0.986"
 	},
 	"devDependencies": {
+		"dotenv": "16.0.0",
 		"nodemon": "2.0.15"
 	}
 }

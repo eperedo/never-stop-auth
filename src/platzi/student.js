@@ -4,10 +4,6 @@ const puppeteer = require('puppeteer-core');
 const UA = require('user-agents');
 
 async function getStudentInformation(username) {
-	// const browser = await puppeteer.launch({
-	// 	headless: process.env.P_HEADLESS || false,
-	// 	args: ['--start-maximized'],
-	// });
 	const browser = await puppeteer.launch({
 		args: chromium.args,
 		executablePath: process.env.P_PATH || (await chromium.executablePath),
