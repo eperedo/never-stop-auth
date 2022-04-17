@@ -4,6 +4,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const Hapi = require('@hapi/hapi');
+const getForumQuestion = require('./platzi/forum');
 const getRankingInformation = require('./platzi/ranking');
 const getStudentInformation = require('./platzi/student');
 
@@ -48,6 +49,27 @@ const init = async () => {
 			if (process.env.RANKING_PWD === request.headers['x-platzi-token']) {
 				try {
 					result = await getRankingInformation();
+				} catch (error) {
+					result.error = error.message;
+				}
+				return {
+					...result,
+				};
+			}
+			return {
+				message: 'nice try, but nope',
+			};
+		},
+	});
+
+	server.route({
+		method: 'GET',
+		path: '/forum-help',
+		handler: async (request) => {
+			if (process.env.RANKING_PWD === request.headers['x-platzi-token']) {
+				let result = {};
+				try {
+					result = await getForumQuestion();
 				} catch (error) {
 					result.error = error.message;
 				}
