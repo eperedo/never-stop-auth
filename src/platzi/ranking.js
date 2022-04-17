@@ -6,18 +6,6 @@ const UA = require('user-agents');
 const { uploadImage } = require('../utils/aws');
 const postToTweet = require('../utils/tweet');
 
-function getPeruDate(date1) {
-	const options1 = {
-		year: 'numeric',
-		month: '2-digit',
-		day: '2-digit',
-	};
-
-	date1.setHours(date1.getHours() - 5);
-	const dateTimeFormat1 = new Intl.DateTimeFormat('es-PE', options1);
-	return dateTimeFormat1.format(date1);
-}
-
 async function getRankingInformation() {
 	const browser = await puppeteer.launch({
 		args: chromium.args,
@@ -52,20 +40,13 @@ async function getRankingInformation() {
 	const cd = new Date();
 	const fileName = cd.toISOString().replace(/:/g, '-').replace('.', '-');
 
-	// const s3Result = await uploadImage(imageParams);
-
-	// await postToTweet(
-	// 	img,
-	// 	`¡Felicitaciones a ${studentInfo[0].username} por tener el mayor rank del día en @platzi! Mira la lista completa en: ${BASE_URL}/foro #nuncaparesdeaprender`,
-	// );
 	uploadAndTweet({ img, fileName, studentInfo });
+
 	await page.close();
+	await browser.close();
 
 	return {
 		students: studentInfo,
-		// urlImage: s3Result.Location,
-		// createdAt: cd.toISOString(),
-		// date: getPeruDate(cd),
 	};
 }
 

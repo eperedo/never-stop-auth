@@ -1,7 +1,3 @@
-// En @platzi no solo tienes acceso a cursos, tambien a una gran comunidad.
-// Se parte de ella ayudando a {username} en los foros
-// https://platzi.com/comment/3553866/
-
 const BASE_URL = 'https://platzi.com';
 
 const chromium = require('chrome-aws-lambda');
@@ -9,20 +5,15 @@ const puppeteer = require('puppeteer-core');
 const UA = require('user-agents');
 const { uploadImage } = require('../utils/aws');
 const postToTweet = require('../utils/tweet');
-
-function getPeruDate(date1) {
-	const options1 = {
-		year: 'numeric',
-		month: '2-digit',
-		day: '2-digit',
-	};
-
-	date1.setHours(date1.getHours() - 5);
-	const dateTimeFormat1 = new Intl.DateTimeFormat('es-PE', options1);
-	return dateTimeFormat1.format(date1);
-}
+const categories = require('./categories');
 
 async function getForumQuestion() {
+	const currentDate = new Date().getDay();
+	const category = categories.find((c) => c.day === currentDate);
+	if (!category) {
+		return { message: `No category for date: ${currentDate}` };
+	}
+
 	const browser = await puppeteer.launch({
 		args: chromium.args,
 		executablePath: process.env.P_PATH || (await chromium.executablePath),
@@ -37,7 +28,7 @@ async function getForumQuestion() {
 		height: 841,
 		deviceScaleFactor: 1,
 	});
-	await page.goto(`${BASE_URL}/foro`, {
+	await page.goto(`${BASE_URL}/foro/${category.prefix}`, {
 		timeout: 0,
 		waitUntil: 'networkidle2',
 	});
@@ -65,8 +56,9 @@ async function getForumQuestion() {
 	const cd = new Date();
 	const fileName = cd.toISOString().replace(/:/g, '-').replace('.', '-');
 
-	uploadAndTweet({ img, fileName, discussion });
+	uploadAndTweet({ category, discussion, img, fileName });
 	await page.close();
+	await browser.close();
 
 	return {
 		discussion,
@@ -74,7 +66,7 @@ async function getForumQuestion() {
 	};
 }
 
-async function uploadAndTweet({ fileName, img, discussion }) {
+async function uploadAndTweet({ category, discussion, fileName, img }) {
 	const imageParams = {
 		Bucket: 'botzi',
 		Key: `forum-help/${fileName}.png`,
@@ -83,12 +75,18 @@ async function uploadAndTweet({ fileName, img, discussion }) {
 		Body: Buffer.from(img, 'base64'),
 		ACL: 'public-read',
 	};
+	// ¡Hoy es ${category.dayName} de ${category.name}! Se parte de la comunidad de @platzi
+	// ayudando a {username} en los foros. ${BASE_URL}${discussion.url}
 	await uploadImage(imageParams);
 	await postToTweet(
 		img,
-		`En @platzi no solo tienes acceso a cursos, tambien a una gran comunidad.
-	  Se parte de ella ayudando a ${discussion.author.username} en los foros. ${BASE_URL}${discussion.url}`,
+		`¡Hoy es ${category.dayName} de ${category.name}! Se parte de la comunidad de @platzi ayudando a ${discussion.author.username} en los foros. ${BASE_URL}${discussion.url}`,
 	);
 }
+
+/* 
+`En @platzi no solo tienes acceso a cursos, tambien a una gran comunidad.
+Se parte de ella ayudando a ${discussion.author.username} en los foros. ${BASE_URL}${discussion.url}`
+*/
 
 module.exports = getForumQuestion;

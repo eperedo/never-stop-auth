@@ -1,0 +1,60 @@
+const categories = [
+	{
+		id: 8,
+		color: '#FFBB00',
+		name: 'Negocios y Emprendimiento',
+		prefix: 'negocios',
+		dayName: 'domingo',
+		day: 0,
+	},
+	{
+		id: 9,
+		name: 'Comunidad',
+		color: '#98ca3f',
+		prefix: 'comunidad',
+		dayName: 'lunes',
+		day: 1,
+	},
+	{
+		id: 7,
+		name: 'Marketing',
+		color: '#1476B8',
+		prefix: 'marketing',
+		dayName: 'martes',
+		day: 2,
+	},
+	{
+		id: 11,
+		name: 'Habilidades Blandas',
+		color: '#CE3B3E',
+		prefix: 'crecimiento-profesional',
+		dayName: 'miercoles',
+		day: 3,
+	},
+	{
+		id: 6,
+		name: 'Diseño y UX',
+		color: '#81439D',
+		prefix: 'diseno',
+		dayName: 'jueves',
+		day: 4,
+	},
+	{
+		id: 5,
+		name: 'Desarrollo e Ingeniería',
+		color: '#17871D',
+		prefix: 'desarrollo',
+		dayName: 'viernes',
+		day: 5,
+	},
+	{
+		id: 17,
+		name: 'Inglés',
+		color: '#C92387',
+		prefix: 'english',
+		dayName: 'sábado',
+		day: 6,
+	},
+];
+
+module.exports = categories;
