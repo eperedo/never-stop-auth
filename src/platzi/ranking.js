@@ -33,7 +33,10 @@ async function getRankingInformation() {
 		height: 841,
 		deviceScaleFactor: 1,
 	});
-	await page.goto(`${BASE_URL}/foro`, { waitUntil: 'networkidle2' });
+	await page.goto(`${BASE_URL}/foro`, {
+		timeout: 0,
+		waitUntil: 'networkidle2',
+	});
 
 	const studentInfo = await page.evaluate(() => {
 		// Student info does not exist
@@ -49,6 +52,24 @@ async function getRankingInformation() {
 	const cd = new Date();
 	const fileName = cd.toISOString().replace(/:/g, '-').replace('.', '-');
 
+	// const s3Result = await uploadImage(imageParams);
+
+	// await postToTweet(
+	// 	img,
+	// 	`¡Felicitaciones a ${studentInfo[0].username} por tener el mayor rank del día en @platzi! Mira la lista completa en: ${BASE_URL}/foro #nuncaparesdeaprender`,
+	// );
+	uploadAndTweet({ img, fileName, studentInfo });
+	await page.close();
+
+	return {
+		students: studentInfo,
+		// urlImage: s3Result.Location,
+		// createdAt: cd.toISOString(),
+		// date: getPeruDate(cd),
+	};
+}
+
+async function uploadAndTweet({ fileName, img, studentInfo }) {
 	const imageParams = {
 		Bucket: 'botzi',
 		Key: `ranking/${fileName}.png`,
@@ -57,21 +78,11 @@ async function getRankingInformation() {
 		Body: Buffer.from(img, 'base64'),
 		ACL: 'public-read',
 	};
-
-	const s3Result = await uploadImage(imageParams);
-
+	await uploadImage(imageParams);
 	await postToTweet(
 		img,
 		`¡Felicitaciones a ${studentInfo[0].username} por tener el mayor rank del día en @platzi! Mira la lista completa en: ${BASE_URL}/foro #nuncaparesdeaprender`,
 	);
-	await page.close();
-
-	return {
-		students: studentInfo,
-		urlImage: s3Result.Location,
-		createdAt: cd.toISOString(),
-		date: getPeruDate(cd),
-	};
 }
 
 module.exports = getRankingInformation;
