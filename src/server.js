@@ -4,6 +4,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const Hapi = require('@hapi/hapi');
+const getAgenda = require('./platzi/agenda');
 const getForumQuestion = require('./platzi/forum');
 const getRankingInformation = require('./platzi/ranking');
 const getStudentInformation = require('./platzi/student');
@@ -80,6 +81,20 @@ const init = async () => {
 			return {
 				message: 'nice try, but nope',
 			};
+		},
+	});
+
+	server.route({
+		method: 'GET',
+		path: '/agenda',
+		handler: async () => {
+			let result = {};
+			try {
+				result = await getAgenda();
+			} catch (error) {
+				result.error = error.message;
+			}
+			return result;
 		},
 	});
 
