@@ -7,7 +7,9 @@ const { uploadImage } = require('../utils/aws');
 const postToTweet = require('../utils/tweet');
 
 async function getAgenda() {
-	const currentDate = new Date().getDay();
+	const currentDate = new Date();
+	// const year = currentDate.getFullYear();
+	// const month = currentDate.getMonth() + 1
 
 	const browser = await puppeteer.launch({
 		args: chromium.args,
@@ -30,6 +32,7 @@ async function getAgenda() {
 
 	const agenda = await page.evaluate(() => {
 		const agendaItems = window.data.scheduleItems.agenda_all.agenda_items;
+		// const agendaValues = Object.values(agendaItems.)
 		return agendaItems;
 	});
 
