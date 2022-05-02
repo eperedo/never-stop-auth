@@ -9,6 +9,10 @@ const getForumQuestion = require('./platzi/forum');
 const getRankingInformation = require('./platzi/ranking');
 const getStudentInformation = require('./platzi/student');
 
+function requestIsValid(request) {
+	return process.env.RANKING_PWD === request.headers['x-platzi-token'];
+}
+
 const init = async () => {
 	const server = Hapi.server({
 		port: process.env.PORT || 3000,
@@ -47,7 +51,7 @@ const init = async () => {
 		path: '/ranking',
 		handler: async (request) => {
 			let result = {};
-			if (process.env.RANKING_PWD === request.headers['x-platzi-token']) {
+			if (requestIsValid(request)) {
 				try {
 					result = await getRankingInformation();
 				} catch (error) {
@@ -67,7 +71,7 @@ const init = async () => {
 		method: 'GET',
 		path: '/forum-help',
 		handler: async (request) => {
-			if (process.env.RANKING_PWD === request.headers['x-platzi-token']) {
+			if (requestIsValid(request)) {
 				let result = {};
 				try {
 					result = await getForumQuestion();
@@ -87,14 +91,20 @@ const init = async () => {
 	server.route({
 		method: 'GET',
 		path: '/agenda',
-		handler: async () => {
-			let result = {};
-			try {
-				result = await getAgenda();
-			} catch (error) {
-				result.error = error.message;
+		handler: async (request) => {
+			if (requestIsValid(request)) {
+				let result = {};
+				try {
+					result = await getAgenda();
+				} catch (error) {
+					result.error = error.message;
+				}
+				return result;
+			} else {
+				return {
+					message: 'nice try, but nope',
+				};
 			}
-			return result;
 		},
 	});
 

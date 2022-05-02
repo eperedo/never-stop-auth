@@ -62,7 +62,7 @@ async function uploadAndTweet({ fileName, img, studentInfo }) {
 	await uploadImage(imageParams);
 	await postToTweet(
 		img,
-		`¡Felicitaciones a ${studentInfo[0].username} por tener el mayor rank del día en @platzi! Mira la lista completa en: ${BASE_URL}/foro #nuncaparesdeaprender`,
+		`¡Felicitaciones a ${studentInfo[0].username} por tener el mayor rank del día en @platzi! 💯 Mira la lista completa en: ${BASE_URL}/foro #nuncaparesdeaprender`,
 	);
 }
 

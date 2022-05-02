@@ -80,7 +80,7 @@ async function uploadAndTweet({ category, discussion, fileName, img }) {
 	await uploadImage(imageParams);
 	await postToTweet(
 		img,
-		`¡Hoy es ${category.dayName} de ${category.name}! Se parte de la comunidad de @platzi ayudando a ${discussion.author.username} en los foros. ${BASE_URL}${discussion.url} #nuncaparesdeaprender`,
+		`¡Hoy es ${category.dayName} de ${category.name}! Se parte de la comunidad de @platzi ayudando a ${discussion.author.username} en los foros 👀. ${BASE_URL}${discussion.url} #nuncaparesdeaprender`,
 	);
 }
 
